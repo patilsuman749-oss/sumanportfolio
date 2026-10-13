@@ -144,3 +144,227 @@ img{display:block;max-width:100%}
   *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .reveal{opacity:1;transform:none}
 }
+
+/* =====================================================================
+   GLASS SYSTEM  (added) — same dark theme, extra frosted-glass motion
+   ===================================================================== */
+:root{
+  --glass-bg:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.022));
+  --glass-border:rgba(255,255,255,.12);
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+
+/* Drifting colour behind everything, so the glass has something to refract */
+.ambient{position:fixed;inset:0;z-index:-4;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.6;animation:blob 24s ease-in-out infinite;will-change:transform}
+.blob.b1{width:440px;height:440px;left:60%;top:4%;background:rgba(55,82,125,.5)}
+.blob.b2{width:380px;height:380px;left:-8%;top:52%;background:rgba(85,44,115,.42);animation-duration:29s;animation-delay:-9s}
+.blob.b3{width:320px;height:320px;left:42%;top:76%;background:rgba(60,110,160,.3);animation-duration:33s;animation-delay:-15s}
+@keyframes blob{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(70px,-50px) scale(1.14)}66%{transform:translate(-60px,55px) scale(.92)}}
+
+/* Reusable frosted panel with a cursor-following highlight and a shine sweep */
+.glass{
+  position:relative;isolation:isolate;overflow:hidden;
+  background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 24px 70px rgba(0,0,0,.35);
+  transition:transform .5s var(--ease),border-color .4s,box-shadow .5s var(--ease),opacity .8s var(--ease);
+}
+.glass:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .4s;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(141,182,255,.17),transparent 46%)}
+.glass:after{content:"";position:absolute;top:0;left:-130%;width:55%;height:100%;z-index:-1;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.085),transparent);transform:skewX(-18deg);
+  transition:left 1s var(--ease)}
+.glass:hover{border-color:rgba(185,208,249,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 30px 80px rgba(0,0,0,.45),0 0 60px rgba(100,150,230,.07)}
+.glass:hover:before{opacity:1}
+.glass:hover:after{left:150%}
+
+/* Hero: split headline, glass orbs and floating chips */
+.words .w{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .04em .1em 0;margin:0 -.04em -.1em 0;font-weight:inherit;color:inherit}
+.words .w>i{display:inline-block;font-style:normal;transform:translateY(108%);filter:blur(10px);opacity:0;
+  animation:wordUp 1s var(--ease) forwards;animation-delay:calc(var(--i) * 80ms + 120ms)}
+@keyframes wordUp{to{transform:none;filter:blur(0);opacity:1}}
+
+.glass-orb{position:absolute;border-radius:50%;pointer-events:none;border:1px solid rgba(255,255,255,.16);
+  background:radial-gradient(circle at 30% 24%,rgba(255,255,255,.22),rgba(141,182,255,.08) 42%,rgba(255,255,255,.015) 72%);
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  box-shadow:inset 0 0 36px rgba(141,182,255,.14),0 18px 50px rgba(0,0,0,.3)}
+.orb-a{width:150px;height:150px;top:-48px;right:-56px;animation:orb 10s ease-in-out infinite}
+.orb-b{width:70px;height:70px;bottom:-36px;right:-24px;z-index:3;animation:orb 8s ease-in-out -3s infinite}
+@keyframes orb{0%,100%{transform:translate(0,0)}50%{transform:translate(-12px,16px)}}
+
+.chip{position:absolute;z-index:4;padding:9px 14px 9px 12px;border-radius:999px;font-size:12px;font-weight:600;
+  display:flex;align-items:center;gap:8px;white-space:nowrap;animation:chip 7s ease-in-out infinite}
+.chip i{width:6px;height:6px;border-radius:50%;background:#8db6ff;box-shadow:0 0 10px #8db6ff}
+.chip.c1{top:9%;left:-40px}
+.chip.c2{top:42%;right:-38px;animation-delay:-2.5s}
+.chip.c2 i{background:#c8a2ff;box-shadow:0 0 10px #c8a2ff}
+.chip.c3{bottom:26%;left:-30px;animation-delay:-4.5s}
+.chip.c3 i{background:#7ee2a8;box-shadow:0 0 10px #7ee2a8}
+@keyframes chip{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+.portrait-label{-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+
+/* Buttons and ticker */
+.button.ghost{background:rgba(255,255,255,.04);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+.ticker{-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);background:rgba(9,9,10,.6)}
+.ticker:hover .ticker-track{animation-play-state:paused}
+
+/* About / contact panels */
+.about-side.glass,.socials.glass{border-top:1px solid var(--glass-border);padding:6px 28px}
+.about-side.glass .about-row:last-child,.socials.glass a:last-child{border-bottom:0}
+.about-row,.socials a{transition:padding .35s var(--ease),color .3s}
+.about-row:hover{padding-left:8px}
+.socials a:hover{padding-left:8px}
+
+/* Projects become glass cards */
+.project.glass{border-top:1px solid var(--glass-border);padding:26px 28px 34px;margin-bottom:28px}
+.project.glass:hover{transform:translateY(-6px)}
+.project-tags{display:inline-flex;align-items:center;gap:12px}
+.badge{font:600 9px "Space Grotesk";letter-spacing:.14em;padding:5px 9px;border-radius:999px;color:#bcd3ff;text-transform:uppercase;
+  background:rgba(141,182,255,.12);border:1px solid rgba(141,182,255,.35);position:relative;overflow:hidden;animation:badge 2.8s ease-in-out infinite}
+@keyframes badge{0%,100%{box-shadow:0 0 0 0 rgba(141,182,255,.35)}50%{box-shadow:0 0 0 7px rgba(141,182,255,0)}}
+a.project-art{display:block;position:relative;transform-style:preserve-3d;transition:transform .35s var(--ease),border-color .4s}
+.project-art:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;
+  background:radial-gradient(380px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.14),transparent 52%)}
+.project-art:hover{border-color:rgba(185,208,249,.4)}
+.project-art:hover:after{opacity:1}
+.project-art.scorex{background:#000}
+.project-art.scorex img{object-fit:contain;transform:scale(1.5)}
+.project:hover .project-art.scorex img{transform:scale(1.58)}
+.project-art.pragya img{padding:25px}
+.link-row{display:flex;flex-wrap:wrap;gap:8px 28px}
+.text-link.alt{color:#9a9aa0;border-color:#34343a}
+
+/* Principles, education, goal */
+.principles{background:rgba(10,10,11,.55)}
+.principle-grid{border-top:0;gap:18px}
+.principle-grid .principle.glass{padding:30px 28px 24px;min-height:230px;border-right:1px solid var(--glass-border)}
+.principle-grid .principle.glass+.principle.glass{padding-left:28px}
+.principle.glass:hover{transform:translateY(-8px)}
+.principle.glass h3{transition:transform .5s var(--ease)}
+.principle.glass:hover h3{transform:translateX(8px)}
+.edu-item{border-radius:18px;border-bottom-color:transparent;position:relative}
+.edu-item:before{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line)}
+.edu-item:hover{padding:27px 20px;background:var(--glass-bg);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px var(--glass-border)}
+.edu-item:hover:before{opacity:0}
+.edu-item.current>span{animation:glowText 3.5s ease-in-out infinite}
+@keyframes glowText{50%{text-shadow:0 0 22px rgba(141,182,255,.65)}}
+.goal{-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.goal:before{content:"";position:absolute;width:240px;height:240px;border-radius:50%;left:-90px;bottom:-120px;background:rgba(130,80,190,.14);filter:blur(6px);animation:goal2 9s ease-in-out infinite}
+@keyframes goal2{50%{transform:translate(90px,-70px) scale(1.15)}}
+
+/* Page transition: frosted wipe */
+.page-wipe{position:fixed;inset:0;z-index:2000;pointer-events:none;background:rgba(7,7,9,.88);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);animation:wipeIn .85s cubic-bezier(.7,0,.2,1) .05s both}
+@keyframes wipeIn{from{clip-path:inset(0 0 0 0)}to{clip-path:inset(0 0 100% 0)}}
+.page-wipe.leaving{animation:wipeOut .45s cubic-bezier(.7,0,.2,1) both}
+@keyframes wipeOut{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+
+/* =====================================================================
+   PROJECT DETAIL PAGES
+   ===================================================================== */
+.p-hero{padding:70px 0 40px}
+.back{display:inline-flex;align-items:center;gap:10px;padding:9px 16px;border-radius:999px;font-size:13px;color:#b2b2b7;margin-bottom:46px}
+.back span{transition:transform .35s var(--ease)}
+.back:hover{color:#fff}.back:hover span{transform:translateX(-5px)}
+.p-cat{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.p-title{font:600 clamp(54px,9.4vw,124px)/.94 "Space Grotesk",sans-serif;letter-spacing:-.07em}
+.p-tagline{font:500 clamp(22px,3vw,34px)/1.2 "Space Grotesk",sans-serif;letter-spacing:-.04em;color:#77777d;margin-top:18px}
+.p-lead{max-width:640px;font-size:18px;color:#a1a1a7;margin-top:26px}
+.p-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);margin-top:48px;padding:8px}
+.meta-item{padding:18px 22px;border-right:1px solid rgba(255,255,255,.08)}
+.meta-item:last-child{border-right:0}
+.meta-item span{display:block;font:600 10px "Space Grotesk";letter-spacing:.14em;color:#66666d;text-transform:uppercase}
+.meta-item strong{display:block;font:500 17px "Space Grotesk";margin-top:7px}
+.p-cover{position:relative;height:min(540px,68vw);margin-top:26px;display:grid;place-items:center;border-radius:32px;transform-style:preserve-3d;transition:transform .35s var(--ease),border-color .4s}
+.p-cover .bg{position:absolute;inset:-40px;z-index:-2;background-size:cover;background-position:center;filter:blur(46px) saturate(1.5) brightness(.5);transform:scale(1.1)}
+.p-cover img{position:relative;height:82%;width:auto;max-width:86%;object-fit:contain;will-change:transform}
+.p-cover.round img{border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+.p-cover.logo img{transform:scale(1.12)}
+.p-section{padding:90px 0}
+.p-section+.p-section{padding-top:30px}
+.p-head{margin-bottom:44px}
+.p-head h2{font:600 clamp(40px,5.4vw,70px)/.98 "Space Grotesk",sans-serif;letter-spacing:-.06em;margin-top:14px}
+.p-head em{font-style:normal;color:#77777d}
+.overview{display:grid;grid-template-columns:1.15fr .85fr;gap:70px;align-items:start}
+.overview-copy p{font-size:19px;color:#b2b2b7;max-width:600px}
+.overview-copy p+p{margin-top:22px}
+.glance{padding:8px 26px}
+.glance .about-row:last-child{border-bottom:0}
+.glance .about-row:first-child{padding-top:20px}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.feature-grid.four{grid-template-columns:repeat(2,1fr)}
+.feature{padding:30px 28px 32px;min-height:220px}
+.feature:hover{transform:translateY(-8px)}
+.f-icon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;margin-bottom:46px;color:#bcd3ff;
+  background:rgba(141,182,255,.1);border:1px solid rgba(141,182,255,.25);box-shadow:inset 0 1px 0 rgba(255,255,255,.18);transition:transform .5s var(--ease),box-shadow .5s}
+.f-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.feature:hover .f-icon{transform:rotate(-8deg) scale(1.1);box-shadow:0 0 30px rgba(141,182,255,.35)}
+.feature h3{font:500 24px "Space Grotesk";letter-spacing:-.03em;margin-bottom:10px}
+.feature p{color:#8a8a91;font-size:14.5px;max-width:340px}
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.tech{padding:13px 20px;border-radius:999px;font:500 14px "Space Grotesk";display:inline-flex;align-items:center;gap:10px}
+.tech i{width:7px;height:7px;border-radius:50%;background:#8db6ff;box-shadow:0 0 10px #8db6ff}
+.tech:hover{transform:translateY(-4px)}
+.brand{display:grid;grid-template-columns:1.1fr .9fr;gap:0;padding:0}
+.brand-art{display:grid;place-items:center;background:#000;padding:40px;border-right:1px solid var(--glass-border)}
+.brand-art img{width:100%;max-width:440px;transform:scale(1.2)}
+.brand-copy{padding:44px 40px}
+.brand-copy h3{font:500 28px "Space Grotesk";letter-spacing:-.04em;margin-bottom:14px}
+.brand-copy p{color:#8f8f96;font-size:15px}
+.swatches{display:flex;gap:10px;margin-top:26px}
+.swatch{width:46px;height:46px;border-radius:14px;border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.timeline{position:relative;display:grid;gap:18px;padding-left:76px;--p:0}
+.timeline:before{content:"";position:absolute;left:22px;top:24px;bottom:24px;width:1px;background:var(--line)}
+.timeline .line{position:absolute;left:22px;top:24px;width:1px;height:calc((100% - 48px) * var(--p));background:linear-gradient(#d3e2ff,#6d8fd0);box-shadow:0 0 14px rgba(141,182,255,.7)}
+.t-item{position:relative}
+.t-card{padding:26px 30px}
+.t-card:hover{transform:translateX(8px)}
+.t-dot{position:absolute;left:-76px;top:22px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font:600 13px "Space Grotesk";color:#d3e2ff;
+  background:#0c0e14;border:1px solid rgba(141,182,255,.4);box-shadow:0 0 0 6px rgba(5,5,5,.9)}
+.t-card h3{font:500 22px "Space Grotesk";letter-spacing:-.03em;margin-bottom:6px}
+.t-card p{color:#8a8a91;font-size:14.5px;max-width:560px}
+.quote{padding:50px 56px;background:linear-gradient(120deg,rgba(255,255,255,.05),rgba(99,137,200,.08))}
+.quote p{font:500 clamp(24px,3vw,38px)/1.25 "Space Grotesk",sans-serif;letter-spacing:-.045em;max-width:860px}
+.quote small{display:block;margin-top:22px;font:600 11px "Space Grotesk";letter-spacing:.14em;color:#77777e;text-transform:uppercase}
+.next{display:grid;grid-template-columns:1fr auto;align-items:center;gap:30px;padding:38px 44px}
+.next:hover{transform:translateY(-6px)}
+.next small{font:600 10px "Space Grotesk";letter-spacing:.14em;color:#77777e;text-transform:uppercase}
+.next h3{font:600 clamp(34px,5vw,60px) "Space Grotesk";letter-spacing:-.06em;margin-top:8px;line-height:1}
+.next .arrow{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;font-size:24px;border:1px solid var(--glass-border);background:rgba(255,255,255,.05);transition:transform .5s var(--ease),background .3s,color .3s}
+.next:hover .arrow{transform:translate(6px,-6px) rotate(-6deg);background:#fff;color:#050505}
+.p-cta{padding:40px 0 140px;text-align:left}
+.p-cta p{font-size:18px;color:#8e8e94;max-width:460px}
+
+@media(max-width:850px){
+  .meta-grid{grid-template-columns:1fr 1fr}
+  .meta-item:nth-child(2){border-right:0}
+  .meta-item:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.08)}
+  .overview,.brand{grid-template-columns:1fr;gap:40px}
+  .brand{gap:0}.brand-art{border-right:0;border-bottom:1px solid var(--glass-border)}
+  .feature-grid,.feature-grid.four{grid-template-columns:1fr 1fr}
+  .principle-grid .principle.glass,.principle-grid .principle.glass+.principle.glass{border-bottom:1px solid var(--glass-border);padding:26px 24px}
+  .principle-grid .principle.glass:last-child{border-bottom:1px solid var(--glass-border)}
+  .project.glass{padding:22px 20px 28px}
+}
+@media(max-width:560px){
+  .portrait-index{right:-18px}
+  .chip{font-size:11px;padding:8px 12px 8px 10px}
+  .chip.c1{left:12px;top:5%}.chip.c2{right:12px;top:40%}.chip.c3{left:12px;bottom:23%}
+  .orb-a{width:110px;height:110px;right:-20px;top:-34px}.orb-b{right:-8px}
+  .feature-grid,.feature-grid.four{grid-template-columns:1fr}
+  .feature{min-height:0}.f-icon{margin-bottom:28px}
+  .timeline{padding-left:60px}.t-dot{left:-60px;width:40px;height:40px}.timeline:before,.timeline .line{left:19px}
+  .t-card{padding:22px}
+  .quote{padding:34px 26px}.next{padding:28px 24px}.next .arrow{width:54px;height:54px}
+  .brand-copy{padding:32px 26px}.p-hero{padding-top:44px}.p-section{padding:64px 0}
+  .about-side.glass,.socials.glass{padding:4px 20px}
+  .socials a{grid-template-columns:90px 1fr 20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .blob,.chip,.glass-orb,.badge,.page-wipe{animation:none!important}
+  .words .w>i{transform:none;filter:none;opacity:1;animation:none}
+  .page-wipe{display:none}
+}
